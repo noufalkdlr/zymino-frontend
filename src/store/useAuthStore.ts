@@ -21,7 +21,6 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       const data = await loginUser(email, password);
 
-      // Helper വഴി ടോക്കൺ സേവ് ചെയ്യുന്നു
       await setToken('access_token', data.access);
       await setToken('refresh_token', data.refresh);
 
