@@ -1,10 +1,10 @@
-import '@/global.css';
-import { useRouter, useSegments, Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { View, ActivityIndicator } from 'react-native';
-import { useAuthStore } from '@/src/store/useAuthStore';
-import { useState, useEffect } from 'react';
 
+import "../global.css";
+import { Stack, useRouter, useSegments } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { useEffect, useState } from 'react';
+import { View, ActivityIndicator } from 'react-native';
+import { useAuthStore } from '../src/store/useAuthStore';
 
 export default function RootLayout() {
   const { isAuthenticated, checkLoginStatus } = useAuthStore();
@@ -16,7 +16,7 @@ export default function RootLayout() {
   useEffect(() => {
     const prepareApp = async () => {
       await checkLoginStatus();
-      setIsReady(true)
+      setIsReady(true);
     };
 
     prepareApp();
@@ -32,25 +32,24 @@ export default function RootLayout() {
     } else if (isAuthenticated && inAuthGroup) {
       router.replace('/(drawer)');
     }
-  }, [isAuthenticated, segments, isReady])
+  }, [isAuthenticated, segments, isReady]);
 
   if (!isReady) {
     return (
-
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }
-      }>
-        <ActivityIndicator size="large" color="#0000ff" />
+      <View style= {{ flex: 1, justifyContent: 'center', alignItems: 'center' }
+  }>
+    <ActivityIndicator size="large" color = "#0000ff" />
       </View>
     );
-  }
+}
 
-  return (
-    <>
-      <StatusBar style="auto" />
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-        < Stack.Screen name="(drawer)" options={{ headerShown: false }} />
-      </Stack>
-    </>
+return (
+  <>
+  <StatusBar style= "auto" />
+  <Stack screenOptions={ { headerShown: false } }>
+    <Stack.Screen name="(auth)" options = {{ headerShown: false }} />
+      < Stack.Screen name = "(drawer)" options = {{ headerShown: false }} />
+        </Stack>
+        </>
   );
-};
+}

@@ -1,12 +1,13 @@
-import { create } from 'zustand';
-import { setToken, deleteToken, getToken } from '../utils/tokenStorage'; // <-- Helper
-import { loginUser } from '../api/auth';
+import { create } from "zustand";
+import { getToken, setToken, deleteToken } from "../utils/tokenStorage";
+import { loginUser } from "../api/auth";
+
 
 interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
-  login: (email, password) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   checkLoginStatus: () => Promise<void>;
 }
@@ -25,25 +26,26 @@ export const useAuthStore = create<AuthState>((set) => ({
       await setToken('refresh_token', data.refresh);
 
       set({ isAuthenticated: true, isLoading: false });
+
     } catch (error) {
       console.error(error);
       set({
         error: 'Login Failed! Check email/password.',
-        isLoading: false
-      });
+        isLoading: false,
+      })
     }
   },
 
   logout: async () => {
     await deleteToken('access_token');
     await deleteToken('refresh_token');
-    set({ isAuthenticated: false });
+    set({ isAuthenticated: false })
   },
 
   checkLoginStatus: async () => {
     const token = await getToken('access_token');
     if (token) {
-      set({ isAuthenticated: true });
+      set({ isAuthenticated: true })
     }
   }
 }));
