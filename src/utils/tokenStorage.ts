@@ -6,7 +6,8 @@ const isWeb = Platform.OS === 'web';
 export const setToken = async (key: string, value: string) => {
   if (isWeb) {
     localStorage.setItem(key, value);
-  } else {
+  }
+  else {
     await SecureStore.setItemAsync(key, value);
   }
 };
@@ -14,7 +15,8 @@ export const setToken = async (key: string, value: string) => {
 export const getToken = async (key: string) => {
   if (isWeb) {
     return localStorage.getItem(key);
-  } else {
+  }
+  else {
     return await SecureStore.getItemAsync(key);
   }
 };
@@ -22,7 +24,8 @@ export const getToken = async (key: string) => {
 export const deleteToken = async (key: string) => {
   if (isWeb) {
     localStorage.removeItem(key);
-  } else {
+  }
+  else {
     await SecureStore.deleteItemAsync(key);
   }
-};
+}
