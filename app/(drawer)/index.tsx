@@ -1,14 +1,14 @@
-import { Text, View, TouchableOpacity } from 'react-native';
-import { useAuthStore } from '@/src/store/useAuthStore';
+import { View, Text } from 'react-native';
 
-export default function HomePage() {
-  const { logout } = useAuthStore()
+export default function HomeScreen() {
   return (
-    <View>
-      <Text>Hello</Text>
-      <TouchableOpacity className='bg-red-500 px-8 py-4' onPress={logout}>
-        <Text className='text-white'>Logout</Text>
-      </TouchableOpacity>
+    <View className="flex-1 justify-center items-center bg-gray-100">
+      <Text className="text-2xl font-bold text-gray-800">
+        Welcome Home! 🎉
+      </Text>
+      <Text className="text-gray-500 mt-4 text-base">
+        Swipe Right 👉 to open the side menu
+      </Text>
     </View>
   );
 }
