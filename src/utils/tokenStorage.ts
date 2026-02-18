@@ -4,28 +4,19 @@ import { Platform } from 'react-native';
 const isWeb = Platform.OS === 'web';
 
 export const setToken = async (key: string, value: string) => {
-  if (isWeb) {
-    localStorage.setItem(key, value);
-  }
-  else {
+  if (!isWeb) {
     await SecureStore.setItemAsync(key, value);
   }
 };
 
 export const getToken = async (key: string) => {
-  if (isWeb) {
-    return localStorage.getItem(key);
-  }
-  else {
+  if (!isWeb) {
     return await SecureStore.getItemAsync(key);
   }
 };
 
 export const deleteToken = async (key: string) => {
-  if (isWeb) {
-    localStorage.removeItem(key);
-  }
-  else {
+  if (!isWeb) {
     await SecureStore.deleteItemAsync(key);
   }
 }

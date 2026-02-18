@@ -1,31 +1,3 @@
-import axios from 'axios';
-import { Platform } from 'react-native';
-
-import { getToken } from '../utils/tokenStorage';
-import { setToken, deleteToken } from '../utils/tokenStorage';
-
-const isWeb = Platform.OS === 'web';
-
-const BASE_URL = Platform.OS === 'web'
-  ? 'http://127.0.0.1:8000/api/'
-  : 'http://10.0.2.2:8000/api/';
-
-export const api = axios.create({
-  baseURL: BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  withCredentials: true,
-});
-
-api.interceptors.request.use(async (config) => {
-  const token = await getToken('access_token');
-  if (token && !isWeb) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -44,24 +16,22 @@ api.interceptors.response.use(
           );
         } else {
           const refreshToken = await getToken('refresh_token');
-          if (!refreshToken) throw new Error('No refresh_token');
+          if (!refreshToken) throw new Error("No refresh token");
 
-          refreshResponse = await axios.post(
-            `${BASE_URL}token/refresh/`,
-            {
-              refresh: refreshToken,
-              platform: 'mobile'
-            },
-          );
+          refreshResponse = await axios.post(`${BASE_URL}token/refresh/`, {
+            refresh: refreshToken,
+            platform: 'mobile',
+          });
 
           const { access, refresh } = refreshResponse.data;
           await setToken('access_token', access);
           await setToken('refresh_token', refresh);
-
-          originalRequest.headers.Authorization = `Bearer ${refreshResponse.data.access}`;
         }
 
-        return api(originalRequest)
+        if (!isWeb) {
+          originalRequest.headers.Authorization = `Bearer ${refreshResponse.data.access}`;
+        }
+        return api(originalRequest);
 
       } catch (refreshError) {
         if (!isWeb) {
@@ -70,10 +40,8 @@ api.interceptors.response.use(
         }
         return Promise.reject(refreshError);
       }
-
     }
 
-    return Promise.reject(error)
-
+    return Promise.reject(error);
   }
 );

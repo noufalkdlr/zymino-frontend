@@ -1,11 +1,16 @@
+import { Platform } from "react-native";
+
 import { api } from "./axios";
 
+
+const platform = Platform.OS === 'web' ? 'web' : 'mobile'
 
 export const loginUser = async (email: string, password: string) => {
   try {
     const response = await api.post('login/', {
       email,
       password,
+      platform,
     });
     return response.data
   } catch (error) {
