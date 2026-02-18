@@ -1,14 +1,17 @@
 import { create } from "zustand";
 import { getToken, setToken, deleteToken } from "../utils/tokenStorage";
-import { loginUser, registerUser } from "../api/auth";
-
+import { loginUser, registerUser, logoutUser } from "../api/auth";
 
 interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
-  signup: (email: string, username: string, password: string) => Promise<boolean>;
+  signup: (
+    email: string,
+    username: string,
+    password: string,
+  ) => Promise<boolean>;
   logout: () => Promise<void>;
   checkLoginStatus: () => Promise<void>;
 }
@@ -23,17 +26,18 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       const data = await loginUser(email, password);
 
-      await setToken('access_token', data.access);
-      await setToken('refresh_token', data.refresh);
+      if (data && data.access) {
+        await setToken("access_token", data.access);
+        await setToken("refresh_token", data.refresh);
+      }
 
       set({ isAuthenticated: true, isLoading: false });
-
     } catch (error) {
       console.error(error);
       set({
-        error: 'Login Failed! Check email/password.',
+        error: "Login Failed! Check email/password.",
         isLoading: false,
-      })
+      });
     }
   },
 
@@ -42,28 +46,33 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       await registerUser(email, username, password);
       set({ isLoading: false });
-      return true
-
+      return true;
     } catch (error) {
       console.error(error);
       set({
-        error: 'Signup Failed! Please check your details.',
+        error: "Signup Failed! Please check your details.",
         isLoading: false,
-      })
+      });
       return false;
     }
   },
 
   logout: async () => {
-    await deleteToken('access_token');
-    await deleteToken('refresh_token');
-    set({ isAuthenticated: false })
+    try {
+      await logoutUser();
+    } catch (error) {
+      console.error("Logout API failed", error);
+    } finally {
+      await deleteToken("access_token");
+      await deleteToken("refresh_token");
+      set({ isAuthenticated: false });
+    }
   },
 
   checkLoginStatus: async () => {
-    const token = await getToken('access_token');
+    const token = await getToken("access_token");
     if (token) {
-      set({ isAuthenticated: true })
+      set({ isAuthenticated: true });
     }
-  }
+  },
 }));
