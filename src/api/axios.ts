@@ -6,11 +6,13 @@ import { setToken, deleteToken } from "../utils/tokenStorage";
 
 const isWeb = Platform.OS === "web";
 
-export const BASE_URL =
-  process.env.EXPO_PUBLIC_API_URL ||
-  (isWeb
-    ? process.env.EXPO_PUBLIC_API_URL_WEB
-    : process.env.EXPO_PUBLIC_API_URL_MOBILE);
+// export const BASE_URL =
+//   process.env.EXPO_PUBLIC_API_URL ||
+//   (isWeb
+//     ? process.env.EXPO_PUBLIC_API_URL_WEB
+//     : process.env.EXPO_PUBLIC_API_URL_MOBILE);
+
+export const BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.31.117:8000/api/'
 
 export const api = axios.create({
   baseURL: BASE_URL,

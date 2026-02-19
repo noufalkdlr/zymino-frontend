@@ -4,26 +4,64 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { useAuthStore } from '../../src/store/useAuthStore';
 
+import { Ionicons } from '@expo/vector-icons';
+
+
+const CustomHeader = ({ navigation }: any) => (
+  <View className="h-16 bg-white flex-row items-center px-4">
+    <TouchableOpacity
+      onPress={() => navigation.openDrawer()}
+      className="mr-4"
+    >
+      <Ionicons name="menu" size={30} color="black" />
+    </TouchableOpacity>
+
+    <Text className="font-bold text-xl">Zymino ✨</Text>
+  </View>
+);
 
 function CustomDrawerContent(props: any) {
   const { logout } = useAuthStore();
 
   return (
-    <View className="flex-1">
-      <DrawerContentScrollView {...props}>
-        <View className="p-6 border-b border-gray-200 mb-4 mt-4">
-          <Text className="text-2xl font-bold text-gray-800">Zymino App</Text>
-          <Text className="text-gray-500 mt-1">Welcome User!</Text>
+    <View className="flex-1 bg-slate-50">
+      <DrawerContentScrollView {...props} contentContainerStyle={{ paddingTop: 0 }}>
+
+        <View className="p-8 bg-blue-600 rounded-br-[50px] mb-6">
+          <View className="w-16 h-16 bg-white rounded-full mb-4 items-center justify-center">
+            <Ionicons name="person" size={30} color="#2563eb" />
+          </View>
+          <Text className="text-white text-xl font-bold">Hello</Text>
+          <Text className="text-blue-100">User ID: #12345</Text>
         </View>
-        <DrawerItemList {...props} />
+
+        <View className="px-4 space-y-2">
+          <TouchableOpacity
+            onPress={() => props.navigation.navigate('index')}
+            className="flex-row items-center p-4 bg-white rounded-xl shadow-sm"
+          >
+            <Ionicons name="home-outline" size={22} color="#475569" />
+            <Text className="ml-4 font-semibold text-slate-700">Home</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => props.navigation.navigate('my-reviews')}
+            className="flex-row items-center p-4 rounded-xl active:bg-blue-50"
+          >
+            <Ionicons name="star-outline" size={22} color="#475569" />
+            <Text className="ml-4 font-semibold text-slate-700">My Reviews</Text>
+          </TouchableOpacity>
+        </View>
+
       </DrawerContentScrollView>
 
-      <View className="p-4 border-t border-gray-200 pb-8">
+      <View className="p-6 border-t border-slate-200">
         <TouchableOpacity
           onPress={logout}
-          className="bg-red-500 py-3 rounded-lg flex-row justify-center items-center active:bg-red-600"
+          className="bg-red-50 py-4 rounded-2xl flex-row justify-center items-center"
         >
-          <Text className="text-white font-bold text-lg">Logout</Text>
+          <Ionicons name="log-out-outline" size={22} color="#ef4444" />
+          <Text className="text-red-500 font-bold ml-2">Logout Now</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -33,12 +71,19 @@ function CustomDrawerContent(props: any) {
 export default function DrawerLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Drawer drawerContent={(props) => <CustomDrawerContent {...props} />}>
+      <Drawer drawerContent={(props) => <CustomDrawerContent {...props} />}
+        screenOptions={{
+          header: (props) => <CustomHeader {...props} />,
+
+        }}
+
+      >
         <Drawer.Screen
           name="index"
           options={{
             drawerLabel: 'Home',
             title: 'Zymino Home',
+            header: (props) => <CustomHeader {...props} />
           }}
         />
 
@@ -46,7 +91,7 @@ export default function DrawerLayout() {
           name="my-reviews"
           options={{
             drawerLabel: 'My Reviews',
-            title: 'My Reviews', 
+            title: 'My Reviews',
           }}
         />
       </Drawer>
