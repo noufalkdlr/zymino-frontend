@@ -47,10 +47,13 @@ export default function RootLayout() {
   return (
     <>
       <StatusBar style="auto" />
-      <Stack screenOptions={{ headerShown: false }}>
+      <Stack screenOptions={{
+        headerShown: false,
+      }}>
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         < Stack.Screen name="(drawer)" options={{ headerShown: false }} />
       </Stack>
     </>
   );
 };
+

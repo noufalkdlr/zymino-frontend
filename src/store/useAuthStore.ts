@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { getToken, setToken, deleteToken } from "../utils/tokenStorage";
 import { loginUser, registerUser, logoutUser } from "../api/auth";
+import { Platform } from "react-native";
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -70,9 +71,15 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   checkLoginStatus: async () => {
+    const isWeb = Platform.OS === 'web';
     const token = await getToken("access_token");
-    if (token) {
+
+    if (token && !isWeb) {
       set({ isAuthenticated: true });
     }
+    else {
+      set({ isAuthenticated: true });
+    }
+
   },
 }));
