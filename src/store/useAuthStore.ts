@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { getToken, setToken, deleteToken } from "../utils/tokenStorage";
 import { loginUser, registerUser, logoutUser } from "../api/auth";
 import { Platform } from "react-native";
+import { api } from "../api/axios";
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -72,13 +73,23 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   checkLoginStatus: async () => {
     const isWeb = Platform.OS === 'web';
-    const token = await getToken("access_token");
 
-    if (token && !isWeb) {
-      set({ isAuthenticated: true });
+    if (!isWeb) {
+      const token = await getToken("access_token");
+      if (token) {
+        set({ isAuthenticated: true });
+      } else {
+        set({ isAuthenticated: false });
+      }
     }
     else {
-      set({ isAuthenticated: true });
+      try {
+        await api.get('/users/profile/me')
+        set({ isAuthenticated: true });
+      }
+      catch {
+        set({ isAuthenticated: false })
+      }
     }
 
   },

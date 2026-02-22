@@ -6,7 +6,7 @@ const platform = Platform.OS === "web" ? "web" : "mobile";
 
 export const loginUser = async (email: string, password: string) => {
   try {
-    const response = await api.post("login/", {
+    const response = await api.post("users/login/", {
       email,
       password,
       platform,
@@ -23,12 +23,10 @@ export const registerUser = async (
   password: string,
 ) => {
   try {
-    const response = await api.post("signup/", {
-      user: {
-        email,
-        username,
-        password,
-      },
+    const response = await api.post("users/signup/", {
+      email,
+      username,
+      password,
     });
     return response.data;
   } catch (error) {
@@ -46,7 +44,7 @@ export const logoutUser = async () => {
       payload = { refresh };
     }
 
-    const response = await api.post("logout/", payload);
+    const response = await api.post("users/logout/", payload);
     return response.data;
   } catch (error) {
     throw error;
