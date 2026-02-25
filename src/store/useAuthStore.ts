@@ -13,6 +13,7 @@ interface AuthState {
     email: string,
     username: string,
     password: string,
+    referralCode: string,
   ) => Promise<boolean>;
   logout: () => Promise<void>;
   checkLoginStatus: () => Promise<void>;
@@ -43,12 +44,20 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 
-  signup: async (email, username, password) => {
+
+  signup: async (email, username, password, referralCode) => {
     set({ isLoading: true, error: null });
     try {
-      await registerUser(email, username, password);
-      set({ isLoading: false });
+      const data = await registerUser(email, username, password, referralCode);
+
+      if (data && data.access) {
+        await setToken("access_token", data.access);
+        await setToken("refresh_token", data.refresh);
+      }
+
+      set({ isAuthenticated: true, isLoading: false });
       return true;
+
     } catch (error) {
       console.error(error);
       set({

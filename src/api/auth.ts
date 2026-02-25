@@ -4,7 +4,7 @@ import { getToken } from "../utils/tokenStorage";
 
 const platform = Platform.OS === "web" ? "web" : "mobile";
 
-export const loginUser = async (email: string, password: string) => {
+export const loginUser = async (email: string, password: string,) => {
   try {
     const response = await api.post("users/login/", {
       email,
@@ -21,12 +21,15 @@ export const registerUser = async (
   email: string,
   username: string,
   password: string,
+  referralCode: string
 ) => {
   try {
     const response = await api.post("users/signup/", {
       email,
       username,
       password,
+      referral_code_input: referralCode,
+      platform,
     });
     return response.data;
   } catch (error) {

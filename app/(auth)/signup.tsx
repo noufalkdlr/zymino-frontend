@@ -7,6 +7,7 @@ export default function SignUpScreen() {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [referralCode, setReferralCode] = useState('')
 
   const router = useRouter()
   const { signup, isLoading, error } = useAuthStore()
@@ -18,12 +19,7 @@ export default function SignUpScreen() {
       return;
     }
 
-    const success = await signup(email, username, password);
-
-    if (success) {
-      alert('Signup Successful! Please login.');
-      router.replace('/(auth)/login')
-    }
+    await signup(email, username, password, referralCode);
 
   }
 
@@ -39,14 +35,6 @@ export default function SignUpScreen() {
 
       <TextInput
         className="border border-gray-300 rounded-lg px-4 py-3 mb-4 text-lg"
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-        autoCapitalize="none"
-      />
-
-      <TextInput
-        className="border border-gray-300 rounded-lg px-4 py-3 mb-4 text-lg"
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
@@ -54,12 +42,30 @@ export default function SignUpScreen() {
         autoCapitalize="none"
       />
 
+
+      <TextInput
+        className="border border-gray-300 rounded-lg px-4 py-3 mb-4 text-lg"
+        placeholder="Username"
+        value={username}
+        onChangeText={setUsername}
+        autoCapitalize="none"
+      />
+
+
       <TextInput
         className="border border-gray-300 rounded-lg px-4 py-3 mb-6 text-lg"
         placeholder="Password"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+      />
+
+      <TextInput
+        className="border border-gray-300 rounded-lg px-4 py-3 mb-6 text-lg"
+        placeholder="Referral code"
+        value={referralCode}
+        onChangeText={setReferralCode}
+        autoCapitalize="none"
       />
 
       {/* Signup Button */}
