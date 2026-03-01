@@ -25,7 +25,7 @@ export const api = axios.create({
 api.interceptors.request.use(async (config) => {
   const token = await getToken("access_token");
   if (token && !isWeb) {
-    config.headers.Authorization = `Bearer ${token}`;
+    config.headers.set('Authorization', `Bearer ${token}`);
   }
   return config;
 });
@@ -37,7 +37,7 @@ export const refreshTokenApi = async () => {
   try {
     if (isWeb) {
       return await axios.post(
-        `${BASE_URL}token/refresh/`,
+        `${BASE_URL}users/token/refresh/`,
         { platform: "web" },
         { withCredentials: true },
       );
@@ -45,7 +45,7 @@ export const refreshTokenApi = async () => {
       const refresh = await getToken("refresh_token");
       if (!refresh) throw new Error("No refresh token");
 
-      return await axios.post(`${BASE_URL}token/refresh/`, {
+      return await axios.post(`${BASE_URL}users/token/refresh/`, {
         refresh: refresh,
         platform: "mobile",
       });
@@ -73,7 +73,7 @@ api.interceptors.response.use(
           await setToken("access_token", access);
           await setToken("refresh_token", refresh);
 
-          originalRequest.headers.Authorization = `Bearer ${access}`;
+          originalRequest.headers.set('Authorization', `Bearer ${access}`);
         }
 
         return api(originalRequest);

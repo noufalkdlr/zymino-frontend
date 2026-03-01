@@ -93,7 +93,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
     else {
       try {
-        await api.get('/users/profile/me')
+        await api.get('users/profile/me/')
         set({ isAuthenticated: true });
       }
       catch {
