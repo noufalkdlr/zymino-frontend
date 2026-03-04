@@ -1,10 +1,11 @@
 import '@/global.css';
 import { useRouter, useSegments, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { View, ActivityIndicator } from 'react-native';
+import * as SplashScreen from 'expo-splash-screen';
 import { useAuthStore } from '@/src/store/useAuthStore';
 import { useState, useEffect } from 'react';
 
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const { isAuthenticated, checkLoginStatus } = useAuthStore();
@@ -16,7 +17,7 @@ export default function RootLayout() {
   useEffect(() => {
     const prepareApp = async () => {
       await checkLoginStatus();
-      setIsReady(true)
+      setIsReady(true);
     };
 
     prepareApp();
@@ -30,18 +31,14 @@ export default function RootLayout() {
     if (!isAuthenticated && !inAuthGroup) {
       router.replace('/(auth)/welcome');
     } else if (isAuthenticated && inAuthGroup) {
-      router.replace('/(drawer)');
+      router.replace('/(tabs)/reviews');
     }
-  }, [isAuthenticated, segments, isReady])
+
+    SplashScreen.hideAsync();
+  }, [isAuthenticated, segments, isReady]);
 
   if (!isReady) {
-    return (
-
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }
-      }>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
+    return null;
   }
 
   return (
@@ -51,9 +48,8 @@ export default function RootLayout() {
         headerShown: false,
       }}>
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-        < Stack.Screen name="(drawer)" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack>
     </>
   );
 };
-
