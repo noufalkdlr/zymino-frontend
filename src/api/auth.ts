@@ -21,6 +21,7 @@ export const registerUser = async (
   email: string,
   username: string,
   password: string,
+  full_name: string,
   referralCode: string
 ) => {
   try {
@@ -28,6 +29,7 @@ export const registerUser = async (
       email,
       username,
       password,
+      full_name,
       referral_code_input: referralCode,
       platform,
     });

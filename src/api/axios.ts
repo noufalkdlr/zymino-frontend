@@ -1,8 +1,7 @@
 import axios from "axios";
 import { Platform } from "react-native";
 
-import { getToken } from "../utils/tokenStorage";
-import { setToken, deleteToken } from "../utils/tokenStorage";
+import { getToken, setToken, deleteToken } from "../utils/tokenStorage";
 
 const isWeb = Platform.OS === "web";
 

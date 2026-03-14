@@ -7,6 +7,7 @@ export default function SignUpScreen() {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [full_name, setFullName] = useState('');
   const [referralCode, setReferralCode] = useState('')
 
   const router = useRouter()
@@ -19,7 +20,7 @@ export default function SignUpScreen() {
       return;
     }
 
-    await signup(email, username, password, referralCode);
+    await signup(email, username, password, full_name, referralCode);
 
   }
 
@@ -48,6 +49,14 @@ export default function SignUpScreen() {
         placeholder="Username"
         value={username}
         onChangeText={setUsername}
+        autoCapitalize="none"
+      />
+
+      <TextInput
+        className="border border-gray-300 rounded-lg px-4 py-3 mb-4 text-lg"
+        placeholder="Full Name"
+        value={full_name}
+        onChangeText={setFullName}
         autoCapitalize="none"
       />
 
